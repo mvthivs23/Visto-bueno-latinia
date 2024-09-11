@@ -1,0 +1,27 @@
+name: HTML Quality Check
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to scan"
+        required: true
+
+      repo:
+        description: "Repositorio"  
+        required: true
+
+jobs:
+  scan_html:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the specified branch
+        uses: actions/checkout@v3
+        with:
+          repository: mvthivs23/${{ github.event.inouts.repo }}
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Run HTML Quality Check
+        run: |
+          chmod +x ./html_quality_check.sh
+          ./html_quality_check.sh 
