@@ -66,4 +66,6 @@ jobs:
 
       - name: Display Approval Status
         run: |
-          figlet "VB Aprobado"
+          figlet "VB Experto Aprobado"
+          echo "-------------------------------------""
+          figlet "DevOps Compliance"
