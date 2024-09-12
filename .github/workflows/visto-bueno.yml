@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Mensaje job 
-        run: ! 
+        run: |
          echo "Ejecutando names validate"        
 
   approval-status:
