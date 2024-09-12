@@ -58,6 +58,10 @@ jobs:
             exit 1
           fi
 
+    - name: validate-names 
+      run: |
+         echo "Ejecutando Names validate"    
+
   validate-names:
     runs-on: ubuntu-latest
     steps:
