@@ -15,17 +15,18 @@ jobs:
   scan-html:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        repository: mvthivs23/${{ github.event.inputs.repo }}
-        ref: ${{ github.event.inputs.branch }}
-    - name: Clone the repository to be scanned
-      run: |
-          git clone --branch ${{ github.event.inputs.branch }} https://github.com/mvthivs23/${{ github.event.inputs.repo }} target_repo
+      - name: Checkout the Actions repository
+        uses: actions/checkout@v3
+        with:
+          ref: main  # Asegúrate de usar la rama correcta donde está el script
+
+      - name: Clone the repository to be scanned
+        run: |
+          git clone --branch ${{ github.event.inputs.branch }} https://github.com/${{ github.event.inputs.repo }} target_repo
           ls -la target_repo
 
-    - name: Run HTML Quality Check
-      run: |
+      - name: Run HTML Quality Check
+        run: |
+          echo "Running quality check..."
           chmod +x ./html_quality_check.sh
           ./html_quality_check.sh target_repo
