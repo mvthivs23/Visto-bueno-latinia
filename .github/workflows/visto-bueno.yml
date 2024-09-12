@@ -66,11 +66,11 @@ jobs:
 
         REPO_DIR="target_repo"
 
-        # Verifica si el directorio existe
-        if [ ! -d "$REPO_DIR" ]; then
-          echo "Error: Directory $REPO_DIR does not exist."
+        # Valida el repo
+        if [ -d "$REPO_DIR" ]; then
+          echo "Escaneando repo y sus componentes en $REPO_DIR..."
           exit 1
-        fi
+        
 
         # Inicializa una lista de validaciones
         listValidations=()
@@ -103,6 +103,10 @@ jobs:
         else
           echo "Validación de comentarios HTML válida"
         fi
+        else
+            echo "Error: Directory $REPO_DIR does not exist."
+            exit 1
+          fi
 
 
   validate-names:
