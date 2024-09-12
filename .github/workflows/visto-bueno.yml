@@ -57,6 +57,14 @@ jobs:
             echo "Error: Directory $REPO_DIR does not exist."
             exit 1
           fi
+
+  validate-names:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Mensaje job 
+       run: ! 
+        echo "Ejecutando names validate"        
+        
   approval-status:
     runs-on: ubuntu-latest
     needs: scan-html
@@ -67,4 +75,3 @@ jobs:
       - name: Display Approval Status
         run: |
           figlet "VB Experto Aprobado"
-   
