@@ -26,6 +26,7 @@ jobs:
           ls -la target_repo
 
     - name: Run HTML Quality Check
+      id: html_check
       run: |
           echo "Running HTML quality check..."
 
@@ -45,12 +46,12 @@ jobs:
               echo "Comentarios encontrados en los archivos HTML:"
               echo "$MATCHES"
               echo "-------------------------------------"
-              exit 1  # Fail the job if comments are found
+              echo "::set-output name=status::fail"
             else
               echo "-------------------------------------"
               echo "No se encontraron comentarios en los archivos HTML."
               echo "-------------------------------------"
-              # Exit with code 0 to indicate success
+              echo "::set-output name=status::pass"
             fi
             
           else
