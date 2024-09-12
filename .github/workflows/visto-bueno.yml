@@ -61,17 +61,18 @@ jobs:
   approval-status:
     runs-on: ubuntu-latest
     needs: scan-html
-    if: needs.scan-html.outputs.status == 'pass'
+    if: ${{ needs.scan-html.outputs.status == 'pass' }}
     steps:
       - name: Approval Status
         run: |
           echo "-------------------------------------"
           echo "El VB ha sido aprobado."
           echo "-------------------------------------"
+
   rejection-status:
     runs-on: ubuntu-latest
     needs: scan-html
-    if: needs.scan-html.outputs.status == 'fail'
+    if: ${{ needs.scan-html.outputs.status == 'fail' }}
     steps:
       - name: Rejection Status
         run: |
