@@ -40,21 +40,20 @@ jobs:
             # Search for comments in HTML files
             MATCHES=$(grep -r -iE "$PATTERN" "$REPO_DIR"/*.html || true)
 
-            if [ -z "$MATCHES" ]; then
-              echo "-------------------------------------"
-              echo "No se encontraron comentarios en los archivos HTML."
-              echo "-------------------------------------"
-              exit 1  # Fail the job if no comments are found
-            else
+            if [ -n "$MATCHES" ]; then
               echo "-------------------------------------"
               echo "Comentarios encontrados en los archivos HTML:"
               echo "$MATCHES"
               echo "-------------------------------------"
               exit 1  # Fail the job if comments are found
+            else
+              echo "-------------------------------------"
+              echo "No se encontraron comentarios en los archivos HTML."
+              echo "-------------------------------------"
+              # Exit with code 0 to indicate success
             fi
             
           else
             echo "Error: Directory $REPO_DIR does not exist."
             exit 1
           fi
-    
