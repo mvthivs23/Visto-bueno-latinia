@@ -57,15 +57,40 @@ jobs:
             echo "Error: Directory $REPO_DIR does not exist."
             exit 1
           fi
-  
-  approval-status:
+
+            # Write result to file
+            echo "Repository: ${{ github.event.inputs.repo }}" > result.txt
+            echo "Branch: ${{ github.event.inputs.branch }}" >> result.txt
+            echo "Component: HTML Quality Check" >> result.txt
+            echo "" >> result.txt
+
+            if [ -n "$MATCHES" ]; then
+              echo "Comentarios encontrados en los archivos HTML:" >> result.txt
+              echo "$MATCHES" >> result.txt
+              echo "" >> result.txt
+              echo "El VB ha sido rechazado." >> result.txt
+              echo "-------------------------------------" >> result.txt
+              echo "status=fail" >> $GITHUB_ENV
+            else
+              echo "No se encontraron comentarios en los archivos HTML." >> result.txt
+              echo "El VB ha sido aprobado." >> result.txt
+              echo "-------------------------------------" >> result.txt
+              echo "status=pass" >> $GITHUB_ENV
+            fi
+          else
+            echo "Error: Directory $REPO_DIR does not exist."
+            exit 1
+          fi
+          
+
+  upload-result:
     runs-on: ubuntu-latest
-    needs: scan-html
+    needs: [scan-html]
     steps:
-      - name: Approval Status
-        run: |
-          echo "-------------------------------------"
-          echo "El VB ha sido aprobado."
-          echo "-------------------------------------"
+      - name: Upload result file
+        uses: actions/upload-artifact@v3
+        with:
+          name: html-quality-result
+          path: result.txt        
 
   
