@@ -69,7 +69,7 @@ jobs:
         # Valida el repo
         if [ -d "$REPO_DIR" ]; then
           echo "Escaneando repo y sus componentes en $REPO_DIR..."
-          exit 1
+          
         
 
         # Inicializa una lista de validaciones
