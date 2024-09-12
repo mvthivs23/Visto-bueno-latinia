@@ -25,9 +25,9 @@ jobs:
           git clone --branch ${{ github.event.inputs.branch }} https://github.com/mvthivs23/${{ github.event.inputs.repo }} target_repo
           ls -la target_repo
 
-    - name: Run HTML Quality Check
+    - name: Comments validate
       run: |
-          echo "Running HTML quality check..."
+          echo "Running Comments validate..."
 
           REPO_DIR="target_repo"
 
