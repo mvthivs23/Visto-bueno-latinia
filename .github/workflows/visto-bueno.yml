@@ -26,7 +26,6 @@ jobs:
           ls -la target_repo
 
     - name: Run HTML Quality Check
-      id: html_check
       run: |
           echo "Running HTML quality check..."
 
@@ -46,12 +45,12 @@ jobs:
               echo "Comentarios encontrados en los archivos HTML:"
               echo "$MATCHES"
               echo "-------------------------------------"
-              echo "::set-output name=status::fail"
+              exit 1  # Fail the job if comments are found
             else
               echo "-------------------------------------"
               echo "No se encontraron comentarios en los archivos HTML."
               echo "-------------------------------------"
-              echo "::set-output name=status::pass"
+              # Exit with code 0 to indicate success
             fi
             
           else
@@ -62,7 +61,6 @@ jobs:
   approval-status:
     runs-on: ubuntu-latest
     needs: scan-html
-    if: ${{ needs.scan-html.outputs.status == 'pass' }}
     steps:
       - name: Approval Status
         run: |
@@ -70,4 +68,4 @@ jobs:
           echo "El VB ha sido aprobado."
           echo "-------------------------------------"
 
- 
+  
