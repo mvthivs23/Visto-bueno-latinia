@@ -6,27 +6,27 @@ on:
       branch:
         description: "Branch to scan"
         required: true
-
       repo:
-        description: "Repositorio"  
+        description: "Repository to scan"  
         required: true
 
 jobs:
   scan-html:
     runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.html_check.outputs.status }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        repository: mvthivs23/${{ github.event.inputs.repo }}
-        ref: ${{ github.event.inputs.branch }}
-    - name: Clone the repository to be scanned
-      run: |
-          git clone --branch ${{ github.event.inputs.branch }} https://github.com/mvthivs23/${{ github.event.inputs.repo }} target_repo
+      - name: Checkout the Actions repository
+        uses: actions/checkout@v3
+
+      - name: Clone the repository to be scanned
+        run: |
+          git clone --branch ${{ github.event.inputs.branch }} https://github.com/${{ github.event.inputs.repo }} target_repo
           ls -la target_repo
 
-    - name: Run HTML Quality Check
-      run: |
+      - name: Run HTML Quality Check
+        id: html_check
+        run: |
           echo "Running HTML quality check..."
 
           REPO_DIR="target_repo"
@@ -39,24 +39,6 @@ jobs:
 
             # Search for comments in HTML files
             MATCHES=$(grep -r -iE "$PATTERN" "$REPO_DIR"/*.html || true)
-
-            if [ -n "$MATCHES" ]; then
-              echo "-------------------------------------"
-              echo "Comentarios encontrados en los archivos HTML:"
-              echo "$MATCHES"
-              echo "-------------------------------------"
-              exit 1  # Fail the job if comments are found
-            else
-              echo "-------------------------------------"
-              echo "No se encontraron comentarios en los archivos HTML."
-              echo "-------------------------------------"
-              # Exit with code 0 to indicate success
-            fi
-            
-          else
-            echo "Error: Directory $REPO_DIR does not exist."
-            exit 1
-          fi
 
             # Write result to file
             echo "Repository: ${{ github.event.inputs.repo }}" > result.txt
@@ -81,16 +63,13 @@ jobs:
             echo "Error: Directory $REPO_DIR does not exist."
             exit 1
           fi
-          
 
   upload-result:
     runs-on: ubuntu-latest
-    needs: [scan-html]
+    needs: scan-html
     steps:
       - name: Upload result file
         uses: actions/upload-artifact@v3
         with:
           name: html-quality-result
-          path: result.txt        
-
-  
+          path: result.txt
