@@ -66,6 +66,12 @@ jobs:
 
         REPO_DIR="target_repo"
 
+        # Verifica si el directorio existe
+        if [ ! -d "$REPO_DIR" ]; then
+          echo "Error: Directory $REPO_DIR does not exist."
+          exit 1
+        fi
+
         declare -a listValidations=()
 
         # Extrae comentarios del archivo HTML
@@ -74,7 +80,7 @@ jobs:
         # Analiza cada comentario
         while read -r comment; do
           validation="true"
-          # Si el comentario contiene '\n' o '\r' y no coincide con las excepciones
+          # Si el comentario contiene saltos de línea o retorno de carro
           if [[ "$comment" =~ $'\n' || "$comment" =~ $'\r' ]]; then
             validation="false"
           fi  
