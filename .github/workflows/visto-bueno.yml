@@ -72,27 +72,34 @@ jobs:
           exit 1
         fi
 
-        declare -a listValidations=()
+        # Inicializa una lista de validaciones
+        listValidations=()
 
-        # Extrae comentarios del archivo HTML
-        comments=$(grep -oP '(?<=<!--).*(?=-->)' "$REPO_DIR"/*.html)
+        # Extrae comentarios de los archivos HTML
+        comments=$(grep -oP '(?<=<!--).*?(?=-->)' "$REPO_DIR"/*.html)
+
+        # Verifica si se encontraron comentarios
+        if [ -z "$comments" ]; then
+          echo "No se encontraron comentarios en los archivos HTML."
+          exit 0
+        fi
 
         # Analiza cada comentario
         while read -r comment; do
           validation="true"
-          # Si el comentario contiene saltos de línea o retorno de carro
+          # Si el comentario contiene saltos de línea o retornos de carro
           if [[ "$comment" =~ $'\n' || "$comment" =~ $'\r' ]]; then
             validation="false"
-          fi  
+          fi
 
-          listValidations+=( "$validation" )
+          listValidations+=("$validation")
           echo "* ($comment) (Comentario válido: $validation)"
         done <<< "$comments"
 
         # Verifica si la lista de validaciones contiene 'false'
         if [[ " ${listValidations[*]} " =~ "false" ]]; then
           echo "ERROR: Validación de comentarios HTML inválida"
-          exit 1  # Fail the job if validation fails
+          exit 1  # Fallar el job si la validación es inválida
         else
           echo "Validación de comentarios HTML válida"
         fi
