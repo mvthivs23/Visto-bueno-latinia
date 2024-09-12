@@ -58,9 +58,39 @@ jobs:
             exit 1
           fi
 
-    - name: validate-names 
+  
+  
+    - name: Validate Comments
       run: |
-         echo "Ejecutando Names validate"    
+        echo "Ejecutando Names validate"
+
+        REPO_DIR="target_repo"
+
+        declare -a listValidations=()
+
+        # Extrae comentarios del archivo HTML
+        comments=$(grep -oP '(?<=<!--).*(?=-->)' "$REPO_DIR"/*.html)
+
+        # Analiza cada comentario
+        while read -r comment; do
+          validation="true"
+          # Si el comentario contiene '\n' o '\r' y no coincide con las excepciones
+          if [[ "$comment" =~ $'\n' || "$comment" =~ $'\r' ]]; then
+            validation="false"
+          fi  
+
+          listValidations+=( "$validation" )
+          echo "* ($comment) (Comentario válido: $validation)"
+        done <<< "$comments"
+
+        # Verifica si la lista de validaciones contiene 'false'
+        if [[ " ${listValidations[*]} " =~ "false" ]]; then
+          echo "ERROR: Validación de comentarios HTML inválida"
+          exit 1  # Fail the job if validation fails
+        else
+          echo "Validación de comentarios HTML válida"
+        fi
+
 
   validate-names:
     runs-on: ubuntu-latest
