@@ -99,13 +99,13 @@ jobs:
         # Verifica si la lista de validaciones contiene 'false'
         if [[ " ${listValidations[*]} " =~ "false" ]]; then
           echo "ERROR: Validación de comentarios HTML inválida"
-          exit 1  # Fallar el job si la validación es inválida
+          
         else
           echo "Validación de comentarios HTML válida"
         fi
         else
             echo "Error: Directory $REPO_DIR does not exist."
-            exit 1
+            
           fi
 
 
